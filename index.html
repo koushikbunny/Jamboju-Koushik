@@ -9,7 +9,7 @@
   <link rel="icon" type="image/svg+xml" href="favicon.svg" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@600;700;800&family=Playfair+Display:ital,wght@1,500;1,600&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=Playfair+Display:ital,wght@1,500;1,600&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
   <style>
     :root {
       --bg: #0b0b0d; --surface: #121216; --surface2: #1a1a22;
@@ -144,6 +144,7 @@
     .wcard .meta { padding: 20px; }
     .wcard h3 { font-family: "Syne", sans-serif; font-size: 18px; font-weight: 800; color: #fff; transition: color .3s; }
     .wcard:hover h3 { color: var(--accent); }
+    .wcard .summary { margin-top: 8px; font-size: 13px; line-height: 1.6; color: var(--sub); }
     .wcard .tools { margin-top: 8px; font-size: 11px; font-weight: 800; letter-spacing: .18em; text-transform: uppercase; color: var(--mut); }
     .spotlight::after { content: ""; position: absolute; inset: 0; border-radius: inherit; opacity: 0; transition: opacity .4s; pointer-events: none;
       background: radial-gradient(520px circle at var(--mx, 50%) var(--my, 50%), rgba(224,122,95,.16), transparent 45%); }
@@ -490,7 +491,7 @@
        ============================================================ */
     const WORKS = [
       { id: "cinematic-travel-film", title: "Cinematic Travel Film", category: "video-edits", tools: "DaVinci Resolve · Color Grading", link: "", img: "https://images.unsplash.com/photo-1614963326505-843868e1d83a?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NjAzNzl8MHwxfHNlYXJjaHwxfHxjaW5lbWF0aWMlMjB2aWRlbyUyMGVkaXRpbmclMjB0aW1lbGluZSUyMG1vbml0b3IlMjBzdHVkaW8lMjBkYXJrJTIwd2FybSUyMGxpZ2h0aW5nfGVufDB8fHx8MTc5MTcwOTQ3M3ww&ixlib=rb-4.1.0&q=85" },
-      { id: "product-ad-cut", title: "Product Ad — 60 Second Cut", category: "video-edits", tools: "Premiere Pro · Sound Design", link: "", img: "https://images.unsplash.com/photo-1646206346896-14367dee001b?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NTY2NjZ8MHwxfHNlYXJjaHwxfHxjaW5lbWF0aWMlMjBmaWxtJTIwc3R1ZGlvJTIwY2FtZXJhJTIwbmVvbiUyMGxpZ2h0aW5nJTIwdmlkZW8lMjBlZGl0aW5nJTIwd29ya3NwYWNlJTIwYXVkaW8lMjBzdHVkaW8lMjBiZWF0bWFraW5nJTIwa2V5Ym9hcmQlMjBwb3N0ZXIlMjBkZXNpZ24lMjB0aHVtYm5haWwlMjBzdHVkaW8lMjBkYXJrJTIwbW9vZHxlbnwwfHx8fDE3OTE3MDk0NjR8MA&ixlib=rb-4.1.0&q=85" },
+      { id: "product-ad-cut", title: "Product Ad — 60 Second Cut", category: "video-edits", tools: "Premiere Pro · Sound Design", link: "", img: "https://images.unsplash.com/photo-1646206346896-14367dee001b?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NTY2NjZ8MHwxfHNlYXJjaHwxfHxwaG90byUyMGVkaXRpbmclMjByZXRvdWNoaW5nJTIwcGhvdG9ncmFwaGVyJTIwd29ya3NwYWNlfGVufDB8fHx8MTc5MTcwOTY5MHww&ixlib=rb-4.1.0&q=85" },
       { id: "podcast-clips-pack", title: "Podcast Clips Pack", category: "shorts-reels", tools: "DaVinci Resolve · Vertical Reframe", link: "", img: "https://images.unsplash.com/photo-1665327465092-a5a05e70bd20?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NTY2NjZ8MHwxfHNlYXJjaHwyfHxjb250ZW50JTIwY3JlYXRvciUyMGZpbG1pbmclMjBwaG9uZSUyMHJpbmclMjBsaWdodHxlbnwwfHx8fDE3OTE3MDk2OTB8MA&ixlib=rb-4.1.0&q=85" },
       { id: "poster-collection", title: "Posters & Thumbnails", category: "posters-thumbnails", tools: `${POSTERS.length} designs · Open collection`, collection: true, img: "posters/paradise%202.png" },
       { id: "basic-photoshop-editing", title: "Basic Photoshop Editing", category: "photo-edits", tools: "Photoshop · Retouching & Color Grading", link: "", img: "https://images.unsplash.com/photo-1777019075773-a231fa4e4534?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NjAzMjV8MHwxfHNlYXJjaHwxfHxwaG90byUyMGVkaXRpbmclMjByZXRvdWNoaW5nJTIwcGhvdG9ncmFwaGVyJTIwd29ya3NwYWNlfGVufDB8fHx8MTc5MTcwOTY5MHww&ixlib=rb-4.1.0&q=85" },
@@ -500,10 +501,27 @@
       { id: "city-lights-lyrics", title: "Song Lyrics — 'City Lights'", category: "writing", tools: "Lyricism · Songwriting", link: "", img: "https://images.unsplash.com/photo-1630032866155-f87ec4d047bd?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NjA2MDV8MHwxfHNlYXJjaHw0fHxoYW5kd3JpdHRlbiUyMGx5cmljcyUyMG5vdGVib29rJTIwcGVuJTIwZGFya3xlbnwwfHx8fDE3OTE3MDk2OTB8MA&ixlib=rb-4.1.0&q=85" },
     ];
 
+    const videoCard = WORKS.find((work) => work.id === "cinematic-travel-film");
+    videoCard.title = "Video Editing";
+    videoCard.summary = "Reels, YouTube videos, sound design, motion graphics and basic colour grading.";
+    videoCard.tools = "DaVinci Resolve · Premiere Pro";
+    WORKS.splice(WORKS.findIndex((work) => work.id === "product-ad-cut"), 1);
+    WORKS.splice(WORKS.findIndex((work) => work.id === "podcast-clips-pack"), 1);
+
+    const beatCard = WORKS.find((work) => work.id === "lofi-nights-pack");
+    beatCard.title = "Beat-Making";
+    beatCard.summary = "Original beats in hip-hop, lo-fi, drill, trap and more.";
+    beatCard.tools = "FL Studio";
+    WORKS.splice(WORKS.findIndex((work) => work.id === "trap-type-beat"), 1);
+    WORKS.splice(WORKS.findIndex((work) => work.id === "launch-ad-script"), 1);
+
+    const songWritingCard = WORKS.find((work) => work.id === "city-lights-lyrics");
+    songWritingCard.title = "Song Writing";
+    songWritingCard.tools = "Lyrics · Songwriting";
+
     const CATEGORIES = [
       { key: "all", label: "All" },
       { key: "video-edits", label: "Video Edits" },
-      { key: "shorts-reels", label: "Shorts & Reels" },
       { key: "posters-thumbnails", label: "Posters & Thumbnails" },
       { key: "photo-edits", label: "Photo Edits" },
       { key: "music-beats", label: "Music & Beats" },
@@ -511,24 +529,32 @@
     ];
 
     const SERVICES = [
-      { title: "Video Editing", desc: "Pacing, color correction, sound design and transitions for long-form YouTube videos, ads and brand content.", tools: "DaVinci Resolve · Premiere Pro", icon: '<path d="M12 2v20M2 12h20"/><path d="m5 5 14 14M5 19 19 5"/>' },
+      { title: "Video Editing", desc: "Reels and YouTube videos with sound design, motion graphics and basic colour grading.", tools: "DaVinci Resolve · Premiere Pro", icon: '<path d="M12 2v20M2 12h20"/><path d="m5 5 14 14M5 19 19 5"/>' },
       { title: "Posters & Thumbnails", desc: "High-CTR YouTube thumbnails and cinematic poster designs built to stop the scroll.", tools: "Photoshop · Canva", icon: '<rect width="18" height="18" x="3" y="3" rx="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/>' },
       { title: "YouTube Shorts & Reels", desc: "Fast-paced, hook-heavy vertical edits with dynamic captions, sound FX and rhythm cuts.", tools: "Premiere Pro · DaVinci Resolve", icon: '<rect width="14" height="20" x="5" y="2" rx="2"/><path d="M12 18h.01"/>' },
       { title: "Script & Content Writing", desc: "Engaging video scripts, storytelling hooks, ad copy and structured creative content.", tools: "Hooks · Retention Writing", icon: '<path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/>' },
       { title: "Photo Editing", desc: "Color grading, skin retouching, background removal and mood enhancement for any shot.", tools: "Photoshop", icon: '<path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z"/><circle cx="12" cy="13" r="3"/>' },
-      { title: "Beat-Making", desc: "Custom hip-hop, lo-fi, trap and cinematic background tracks produced for creators.", tools: "FL Studio", icon: '<path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/>' },
+      { title: "Beat-Making", desc: "Original beats in hip-hop, lo-fi, drill, trap and other genres.", tools: "FL Studio", icon: '<path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/>' },
       { title: "Lyrics & Songwriting", desc: "Original lyrics, rhyme schemes and songwriting tailored to your concept and melody.", tools: "Lyricism · Vocal Melodies", icon: '<path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><path d="M12 19v3"/>' },
     ];
 
     const TOOLS = [
       { name: "DaVinci Resolve", role: "Color grading & pro video editing", icon: '<path d="M12 2v20M2 12h20"/><path d="m5 5 14 14M5 19 19 5"/>' },
       { name: "Adobe Premiere Pro", role: "Timeline editing & motion graphics", icon: '<path d="m16 13 5.223 3.482a.5.5 0 0 0 .777-.416V7.87a.5.5 0 0 0-.752-.432L16 10.5"/><rect x="2" y="6" width="14" height="12" rx="2"/>' },
-      { name: "FL Studio", role: "Beat-making, mixing & audio production", icon: '<path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/>' },
+      { name: "FL Studio", role: "Beat-making & music production", icon: '<path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/>' },
       { name: "Adobe Photoshop", role: "Thumbnail creation & photo retouching", icon: '<rect width="18" height="18" x="3" y="3" rx="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/>' },
       { name: "Canva", role: "Rapid layouts & social collateral", icon: '<rect width="18" height="18" x="3" y="3" rx="2"/><path d="M3 9h18"/><path d="M9 21V9"/>' },
     ];
 
-    const MARQUEE = ["Video Editing", "YouTube Shorts & Reels", "Posters & Thumbnails", "Beat-Making", "Script & Content Writing", "Photo Editing", "Lyrics & Songwriting"];
+    const MARQUEE = [
+      "Video Editing",
+      "YouTube Shorts & Reels",
+      "Posters & Thumbnails",
+      "Beat-Making",
+      "Script & Content Writing",
+      "Photo Editing",
+      "Lyrics & Songwriting",
+    ];
 
     const waService = (s) => `${WA}?text=${encodeURIComponent(`Hi Koushik! I found your portfolio and I need help with ${s}. Can we talk?`)}`;
 
@@ -557,7 +583,7 @@
             <img src="${w.img}" alt="${w.title}" loading="lazy" />
             <span class="wtag">${label}</span>
           </div>
-          <div class="meta"><h3>${w.title}</h3><p class="tools">${w.tools}</p></div>`;
+          <div class="meta"><h3>${w.title}</h3>${w.summary ? `<p class="summary">${w.summary}</p>` : ""}<p class="tools">${w.tools}</p></div>`;
         return w.collection
           ? `<button class="wcard spotlight poster-collection" type="button" aria-haspopup="dialog" aria-label="Open all ${POSTERS.length} posters and thumbnails">${inner}</button>`
           : w.link
