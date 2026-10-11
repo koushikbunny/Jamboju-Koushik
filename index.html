@@ -481,6 +481,19 @@
       { title: "Birthday Card Design", img: "posters/birthday%20card.png" },
     ];
 
+    const PHOTOSHOP_EDITS = [
+      { title: "Bee Edit", img: "photoshop%20edit/bee.jpg" },
+      { title: "Insect Edit", img: "photoshop%20edit/insect.jpg" },
+      { title: "Paradise Edit", img: "photoshop%20edit/paradise.jpg" },
+      { title: "Paradise Edit 2", img: "photoshop%20edit/paradise%202.png" },
+      { title: "PHASEPHASE Edit", img: "photoshop%20edit/PHASEPHASE.png" },
+      { title: "Photo Edit", img: "photoshop%20edit/20251202_151857%20(1).jpg" },
+      { title: "Photo Edit", img: "photoshop%20edit/IMG_5319%20(1).jpg" },
+      { title: "Photo Edit", img: "photoshop%20edit/IMG_5325.jpg" },
+      { title: "Photo Edit", img: "photoshop%20edit/20250206_174251(0).jpg" },
+      { title: "Fly Edit", img: "photoshop%20edit/flys%20(1).jpg" },
+    ];
+
     /* ============================================================
        YOUR WORK — replace placeholders with real projects:
        • link: your YouTube / Drive / Instagram URL ("" = no link)
@@ -494,7 +507,7 @@
       { id: "product-ad-cut", title: "Product Ad — 60 Second Cut", category: "video-edits", tools: "Premiere Pro · Sound Design", link: "", img: "https://images.unsplash.com/photo-1646206346896-14367dee001b?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NTY2NjZ8MHwxfHNlYXJjaHwxfHxwaG90byUyMGVkaXRpbmclMjByZXRvdWNoaW5nJTIwcGhvdG9ncmFwaGVyJTIwd29ya3NwYWNlfGVufDB8fHx8MTc5MTcwOTY5MHww&ixlib=rb-4.1.0&q=85" },
       { id: "podcast-clips-pack", title: "Podcast Clips Pack", category: "shorts-reels", tools: "DaVinci Resolve · Vertical Reframe", link: "", img: "https://images.unsplash.com/photo-1665327465092-a5a05e70bd20?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NTY2NjZ8MHwxfHNlYXJjaHwyfHxjb250ZW50JTIwY3JlYXRvciUyMGZpbG1pbmclMjBwaG9uZSUyMHJpbmclMjBsaWdodHxlbnwwfHx8fDE3OTE3MDk2OTB8MA&ixlib=rb-4.1.0&q=85" },
       { id: "poster-collection", title: "Posters & Thumbnails", category: "posters-thumbnails", tools: `${POSTERS.length} designs · Open collection`, collection: true, img: "posters/paradise%202.png" },
-      { id: "basic-photoshop-editing", title: "Basic Photoshop Editing", category: "photo-edits", tools: "Photoshop · Retouching & Color Grading", link: "", img: "https://images.unsplash.com/photo-1777019075773-a231fa4e4534?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NjAzMjV8MHwxfHNlYXJjaHwxfHxwaG90byUyMGVkaXRpbmclMjByZXRvdWNoaW5nJTIwcGhvdG9ncmFwaGVyJTIwd29ya3NwYWNlfGVufDB8fHx8MTc5MTcwOTY5MHww&ixlib=rb-4.1.0&q=85" },
+      { id: "basic-photoshop-editing", title: "Basic Photoshop Editing", category: "photo-edits", summary: "Photo retouching and creative image edits.", tools: `${PHOTOSHOP_EDITS.length} edits · Open collection`, collection: true, img: PHOTOSHOP_EDITS[0].img },
       { id: "lofi-nights-pack", title: "Lo-fi Nights Beat Pack", category: "music-beats", tools: "FL Studio · Mixing", link: "", img: "https://images.unsplash.com/photo-1518972559570-7cc1309f3229?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NjAzOTB8MHwxfHNlYXJjaHwxfHxtdXNpYyUyMHN0dWRpbyUyMHN5bnRoJTIwYmVhdCUyMG1ha2VyJTIwZGFyayUyMHdhcm0lMjBnbG93JTIwYW1iZXJ8ZW58MHx8fHwxNzkxNzA5NDczfDA&ixlib=rb-4.1.0&q=85" },
       { id: "trap-type-beat", title: "Trap Type Beat — 'Ember'", category: "music-beats", tools: "FL Studio · 808s & Melodies", link: "", img: "https://images.unsplash.com/photo-1525362081669-2b476bb628c3?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NjAzOTB8MHwxfHNlYXJjaHwzfHxtdXNpYyUyMHN0dWRpbyUyMHN5bnRoJTIwYmVhdCUyMG1ha2VyJTIwZGFyayUyMHdhcm0lMjBnbG93JTIwYW1iZXJ8ZW58MHx8fHwxNzkxNzA5NDczfDA&ixlib=rb-4.1.0&q=85" },
       { id: "launch-ad-script", title: "Launch Video Script", category: "writing", tools: "Hooks · Retention Writing", link: "", img: "https://images.unsplash.com/photo-1473186505569-9c61870c11f9?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NjA2MDV8MHwxfHNlYXJjaHwzfHxoYW5kd3JpdHRlbiUyMGx5cmljcyUyMG5vdGVib29rJTIwcGVuJTIwZGFya3xlbnwwfHx8fDE3OTE3MDk2OTB8MA&ixlib=rb-4.1.0&q=85" },
@@ -585,7 +598,7 @@
           </div>
           <div class="meta"><h3>${w.title}</h3>${w.summary ? `<p class="summary">${w.summary}</p>` : ""}<p class="tools">${w.tools}</p></div>`;
         return w.collection
-          ? `<button class="wcard spotlight poster-collection" type="button" aria-haspopup="dialog" aria-label="Open all ${POSTERS.length} posters and thumbnails">${inner}</button>`
+          ? `<button class="wcard spotlight poster-collection" type="button" data-collection="${w.category}" aria-haspopup="dialog" aria-label="Open ${w.title} collection">${inner}</button>`
           : w.link
           ? `<a class="wcard spotlight" href="${w.link}" target="_blank" rel="noopener">${inner}</a>`
           : `<div class="wcard spotlight">${inner}</div>`;
@@ -602,7 +615,19 @@
       </a>`).join("");
     document.getElementById("posterClose").addEventListener("click", () => posterDialog.close());
     grid.addEventListener("click", (event) => {
-      if (event.target.closest(".poster-collection")) posterDialog.showModal();
+      const card = event.target.closest(".poster-collection");
+      if (!card) return;
+      const collection = card.dataset.collection === "photo-edits"
+        ? { title: "Basic Photoshop Editing", items: PHOTOSHOP_EDITS }
+        : { title: "Posters & Thumbnails", items: POSTERS };
+      document.getElementById("posterDialogTitle").textContent = collection.title;
+      document.getElementById("posterCount").textContent = `${collection.items.length} designs`;
+      document.getElementById("posterGrid").innerHTML = collection.items.map((item) => `
+        <a class="poster-item" href="${item.img}" target="_blank" rel="noopener">
+          <img src="${item.img}" alt="${item.title}" loading="lazy" />
+          <span>${item.title}</span>
+        </a>`).join("");
+      posterDialog.showModal();
     });
     posterDialog.addEventListener("click", (event) => {
       if (event.target === posterDialog) posterDialog.close();
