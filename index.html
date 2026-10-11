@@ -148,6 +148,22 @@
     .spotlight::after { content: ""; position: absolute; inset: 0; border-radius: inherit; opacity: 0; transition: opacity .4s; pointer-events: none;
       background: radial-gradient(520px circle at var(--mx, 50%) var(--my, 50%), rgba(224,122,95,.16), transparent 45%); }
     .spotlight:hover::after { opacity: 1; }
+    .poster-collection { appearance: none; width: 100%; padding: 0; text-align: left; font: inherit; }
+    .poster-collection:focus-visible, .poster-item:focus-visible, .poster-close:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+    .poster-dialog { width: min(1000px, calc(100% - 32px)); max-width: none; max-height: 90vh; margin: auto; padding: 24px;
+      border: 1px solid var(--line); border-radius: 14px; background: var(--surface); color: var(--text); overflow: auto; }
+    .poster-dialog::backdrop { background: rgba(0,0,0,.82); backdrop-filter: blur(6px); }
+    .poster-dialog-head { position: sticky; top: -24px; z-index: 2; display: flex; justify-content: space-between; align-items: center;
+      gap: 20px; margin: -24px -24px 20px; padding: 18px 24px; border-bottom: 1px solid var(--line); background: rgba(18,18,22,.96); }
+    .poster-dialog-head h2 { font-family: "Syne", sans-serif; font-size: 20px; }
+    .poster-dialog-head p { margin-top: 4px; font-size: 12px; color: var(--sub); }
+    .poster-close { width: 40px; height: 40px; flex: 0 0 auto; border: 1px solid var(--line); border-radius: 50%; background: none; font-size: 22px; }
+    .poster-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; }
+    .poster-item { min-width: 0; color: var(--text); }
+    .poster-item img { width: 100%; aspect-ratio: 4/3; object-fit: cover; border-radius: 8px; border: 1px solid var(--line); transition: border-color .2s; }
+    .poster-item:hover img { border-color: var(--accent); }
+    .poster-item span { display: block; margin-top: 8px; font-size: 12px; font-weight: 700; }
+    @media (max-width: 640px) { .poster-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; } .poster-dialog { padding: 16px; } .poster-dialog-head { top: -16px; margin: -16px -16px 16px; padding: 14px 16px; } }
 
     /* SERVICES */
     .sgrid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 16px; }
@@ -340,6 +356,14 @@
     </div>
   </section>
 
+  <dialog class="poster-dialog" id="posterDialog" aria-labelledby="posterDialogTitle">
+    <div class="poster-dialog-head">
+      <div><h2 id="posterDialogTitle">Posters &amp; Thumbnails</h2><p id="posterCount"></p></div>
+      <button class="poster-close" id="posterClose" type="button" aria-label="Close poster collection">×</button>
+    </div>
+    <div class="poster-grid" id="posterGrid"></div>
+  </dialog>
+
   <!-- SERVICES -->
   <section class="pad" id="services" style="padding-top:0">
     <div class="wrap">
@@ -442,6 +466,20 @@
   <script>
     const WA = "https://wa.me/918712297416";
 
+    const POSTERS = [
+      { title: "BGMI Thumbnail", img: "posters/bgmi%20thumbnail.png" },
+      { title: "Roll the Dice Poster", img: "posters/roll%20the%20dice.png" },
+      { title: "Rate Card Design", img: "posters/rate%20card.png" },
+      { title: "Rate Card Design 2", img: "posters/rate%20card%202.png" },
+      { title: "Rate Card Design 3", img: "posters/rate%20card%203.png" },
+      { title: "PHASEPHASE Poster", img: "posters/PHASEPHASE.png" },
+      { title: "Paradise Poster", img: "posters/paradise.jpg" },
+      { title: "Paradise Poster 2", img: "posters/paradise%202.png" },
+      { title: "Kaam 25 Poster", img: "posters/kaam%2025.png" },
+      { title: "Experimental Poster", img: "posters/experiment.png" },
+      { title: "Birthday Card Design", img: "posters/birthday%20card.png" },
+    ];
+
     /* ============================================================
        YOUR WORK — replace placeholders with real projects:
        • link: your YouTube / Drive / Instagram URL ("" = no link)
@@ -453,21 +491,9 @@
     const WORKS = [
       { id: "cinematic-travel-film", title: "Cinematic Travel Film", category: "video-edits", tools: "DaVinci Resolve · Color Grading", link: "", img: "https://images.unsplash.com/photo-1614963326505-843868e1d83a?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NjAzNzl8MHwxfHNlYXJjaHwxfHxjaW5lbWF0aWMlMjB2aWRlbyUyMGVkaXRpbmclMjB0aW1lbGluZSUyMG1vbml0b3IlMjBzdHVkaW8lMjBkYXJrJTIwd2FybSUyMGxpZ2h0aW5nfGVufDB8fHx8MTc5MTcwOTQ3M3ww&ixlib=rb-4.1.0&q=85" },
       { id: "product-ad-cut", title: "Product Ad — 60 Second Cut", category: "video-edits", tools: "Premiere Pro · Sound Design", link: "", img: "https://images.unsplash.com/photo-1646206346896-14367dee001b?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NTY2NjZ8MHwxfHNlYXJjaHwxfHxjaW5lbWF0aWMlMjBmaWxtJTIwc3R1ZGlvJTIwY2FtZXJhJTIwbmVvbiUyMGxpZ2h0aW5nJTIwdmlkZW8lMjBlZGl0aW5nJTIwd29ya3NwYWNlJTIwYXVkaW8lMjBzdHVkaW8lMjBiZWF0bWFraW5nJTIwa2V5Ym9hcmQlMjBwb3N0ZXIlMjBkZXNpZ24lMjB0aHVtYm5haWwlMjBzdHVkaW8lMjBkYXJrJTIwbW9vZHxlbnwwfHx8fDE3OTE3MDk0NjR8MA&ixlib=rb-4.1.0&q=85" },
-      { id: "hook-first-reel", title: "Hook-First Reel Edit", category: "shorts-reels", tools: "Premiere Pro · Captions & SFX", link: "", img: "https://images.unsplash.com/photo-1665327469486-c1d47eed44ae?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NTY2NjZ8MHwxfHNlYXJjaHwzfHxjb250ZW50JTIwY3JlYXRvciUyMGZpbG1pbmclMjBwaG9uZSUyMHJpbmclMjBsaWdodHxlbnwwfHx8fDE3OTE3MDk2OTB8MA&ixlib=rb-4.1.0&q=85" },
       { id: "podcast-clips-pack", title: "Podcast Clips Pack", category: "shorts-reels", tools: "DaVinci Resolve · Vertical Reframe", link: "", img: "https://images.unsplash.com/photo-1665327465092-a5a05e70bd20?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NTY2NjZ8MHwxfHNlYXJjaHwyfHxjb250ZW50JTIwY3JlYXRvciUyMGZpbG1pbmclMjBwaG9uZSUyMHJpbmclMjBsaWdodHxlbnwwfHx8fDE3OTE3MDk2OTB8MA&ixlib=rb-4.1.0&q=85" },
-      { id: "bgmi-thumbnail", title: "BGMI Thumbnail", category: "posters-thumbnails", tools: "Thumbnail Design", link: "posters/bgmi%20thumbnail.png", img: "posters/bgmi%20thumbnail.png" },
-      { id: "roll-the-dice", title: "Roll the Dice Poster", category: "posters-thumbnails", tools: "Poster Design", link: "posters/roll%20the%20dice.png", img: "posters/roll%20the%20dice.png" },
-      { id: "rate-card", title: "Rate Card Design", category: "posters-thumbnails", tools: "Graphic Design", link: "posters/rate%20card.png", img: "posters/rate%20card.png" },
-      { id: "rate-card-2", title: "Rate Card Design 2", category: "posters-thumbnails", tools: "Graphic Design", link: "posters/rate%20card%202.png", img: "posters/rate%20card%202.png" },
-      { id: "rate-card-3", title: "Rate Card Design 3", category: "posters-thumbnails", tools: "Graphic Design", link: "posters/rate%20card%203.png", img: "posters/rate%20card%203.png" },
-      { id: "phasephase", title: "PHASEPHASE Poster", category: "posters-thumbnails", tools: "Poster Design", link: "posters/PHASEPHASE.png", img: "posters/PHASEPHASE.png" },
-      { id: "paradise", title: "Paradise Poster", category: "posters-thumbnails", tools: "Poster Design", link: "posters/paradise.jpg", img: "posters/paradise.jpg" },
-      { id: "paradise-2", title: "Paradise Poster 2", category: "posters-thumbnails", tools: "Poster Design", link: "posters/paradise%202.png", img: "posters/paradise%202.png" },
-      { id: "kaam-25", title: "Kaam 25 Poster", category: "posters-thumbnails", tools: "Poster Design", link: "posters/kaam%2025.png", img: "posters/kaam%2025.png" },
-      { id: "experiment", title: "Experimental Poster", category: "posters-thumbnails", tools: "Poster Design", link: "posters/experiment.png", img: "posters/experiment.png" },
-      { id: "birthday-card", title: "Birthday Card Design", category: "posters-thumbnails", tools: "Graphic Design", link: "posters/birthday%20card.png", img: "posters/birthday%20card.png" },
-      { id: "portrait-retouch-suite", title: "Portrait Retouch Suite", category: "photo-edits", tools: "Photoshop · Skin & Color", link: "", img: "https://images.unsplash.com/photo-1777019075773-a231fa4e4534?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NjAzMjV8MHwxfHNlYXJjaHwxfHxwaG90byUyMGVkaXRpbmclMjByZXRvdWNoaW5nJTIwcGhvdG9ncmFwaGVyJTIwd29ya3NwYWNlfGVufDB8fHx8MTc5MTcwOTY5MHww&ixlib=rb-4.1.0&q=85" },
-      { id: "moody-grade-pack", title: "Moody Color Grade Pack", category: "photo-edits", tools: "Photoshop · Lightroom Style", link: "", img: "https://images.unsplash.com/photo-1777019051200-b8281581c426?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NjAzMjV8MHwxfHNlYXJjaHw0fHxwaG90byUyMGVkaXRpbmclMjByZXRvdWNoaW5nJTIwcGhvdG9ncmFwaGVyJTIwd29ya3NwYWNlfGVufDB8fHx8MTc5MTcwOTY5MHww&ixlib=rb-4.1.0&q=85" },
+      { id: "poster-collection", title: "Posters & Thumbnails", category: "posters-thumbnails", tools: `${POSTERS.length} designs · Open collection`, collection: true, img: "posters/paradise%202.png" },
+      { id: "basic-photoshop-editing", title: "Basic Photoshop Editing", category: "photo-edits", tools: "Photoshop · Retouching & Color Grading", link: "", img: "https://images.unsplash.com/photo-1777019075773-a231fa4e4534?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NjAzMjV8MHwxfHNlYXJjaHwxfHxwaG90byUyMGVkaXRpbmclMjByZXRvdWNoaW5nJTIwcGhvdG9ncmFwaGVyJTIwd29ya3NwYWNlfGVufDB8fHx8MTc5MTcwOTY5MHww&ixlib=rb-4.1.0&q=85" },
       { id: "lofi-nights-pack", title: "Lo-fi Nights Beat Pack", category: "music-beats", tools: "FL Studio · Mixing", link: "", img: "https://images.unsplash.com/photo-1518972559570-7cc1309f3229?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NjAzOTB8MHwxfHNlYXJjaHwxfHxtdXNpYyUyMHN0dWRpbyUyMHN5bnRoJTIwYmVhdCUyMG1ha2VyJTIwZGFyayUyMHdhcm0lMjBnbG93JTIwYW1iZXJ8ZW58MHx8fHwxNzkxNzA5NDczfDA&ixlib=rb-4.1.0&q=85" },
       { id: "trap-type-beat", title: "Trap Type Beat — 'Ember'", category: "music-beats", tools: "FL Studio · 808s & Melodies", link: "", img: "https://images.unsplash.com/photo-1525362081669-2b476bb628c3?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NjAzOTB8MHwxfHNlYXJjaHwzfHxtdXNpYyUyMHN0dWRpbyUyMHN5bnRoJTIwYmVhdCUyMG1ha2VyJTIwZGFyayUyMHdhcm0lMjBnbG93JTIwYW1iZXJ8ZW58MHx8fHwxNzkxNzA5NDczfDA&ixlib=rb-4.1.0&q=85" },
       { id: "launch-ad-script", title: "Launch Video Script", category: "writing", tools: "Hooks · Retention Writing", link: "", img: "https://images.unsplash.com/photo-1473186505569-9c61870c11f9?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NjA2MDV8MHwxfHNlYXJjaHwzfHxoYW5kd3JpdHRlbiUyMGx5cmljcyUyMG5vdGVib29rJTIwcGVuJTIwZGFya3xlbnwwfHx8fDE3OTE3MDk2OTB8MA&ixlib=rb-4.1.0&q=85" },
@@ -532,12 +558,29 @@
             <span class="wtag">${label}</span>
           </div>
           <div class="meta"><h3>${w.title}</h3><p class="tools">${w.tools}</p></div>`;
-        return w.link
+        return w.collection
+          ? `<button class="wcard spotlight poster-collection" type="button" aria-haspopup="dialog" aria-label="Open all ${POSTERS.length} posters and thumbnails">${inner}</button>`
+          : w.link
           ? `<a class="wcard spotlight" href="${w.link}" target="_blank" rel="noopener">${inner}</a>`
           : `<div class="wcard spotlight">${inner}</div>`;
       }).join("");
     }
     render();
+
+    const posterDialog = document.getElementById("posterDialog");
+    document.getElementById("posterCount").textContent = `${POSTERS.length} designs`;
+    document.getElementById("posterGrid").innerHTML = POSTERS.map((poster) => `
+      <a class="poster-item" href="${poster.img}" target="_blank" rel="noopener">
+        <img src="${poster.img}" alt="${poster.title}" loading="lazy" />
+        <span>${poster.title}</span>
+      </a>`).join("");
+    document.getElementById("posterClose").addEventListener("click", () => posterDialog.close());
+    grid.addEventListener("click", (event) => {
+      if (event.target.closest(".poster-collection")) posterDialog.showModal();
+    });
+    posterDialog.addEventListener("click", (event) => {
+      if (event.target === posterDialog) posterDialog.close();
+    });
 
     const sgrid = document.getElementById("sgrid");
     sgrid.innerHTML = SERVICES.map((s) => `
